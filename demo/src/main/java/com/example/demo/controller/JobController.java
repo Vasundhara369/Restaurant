@@ -80,9 +80,12 @@ public class JobController {
 	public String deleteJob(@PathVariable(name = "id") Integer id) {
 		session = sf.openSession();
 		tx = session.beginTransaction();
-		Query query = session.createQuery("from Job where jobId=:i");
+		Query query = session.createQuery("from Application where job.jobId=:i");
 		query.setParameter("i", id);
-		session.createQuery("from Application where jobId=:i");
+		List<Application> applications = query.list();
+		for(int i=0;i<applications.size();i++)
+		session.delete(applications.get(i));
+		session.createQuery("from Job where jobId=:i");
 		query.setParameter("i", id);
 		Job job = (Job) query.uniqueResult();
 		session.delete(job);
@@ -101,10 +104,10 @@ public class JobController {
 	}
 	
 	@CrossOrigin(origins = "http://172.17.0.3:3000")
-	@GetMapping(path = "/getJobsPostedByRecruiter/id")
+	@GetMapping(path = "/getJobsPostedByRecruiter/{id}")
 	public List<Job> getJobsPostedByRecruiter(@PathVariable(name = "id") Integer id) {
 		session = sf.openSession();
-		Query query = session.createQuery("from Job where recruiter=:i");
+		Query query = session.createQuery("from Job where recruiter.recruiterId=:i");
 		query.setParameter("i", id);
 		List<Job> jobs = query.list();
 		return jobs;

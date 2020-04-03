@@ -101,17 +101,17 @@ public class ApplicationsController {
 	}
 
 	@CrossOrigin(origins = "http://172.17.0.3:3000")
-	@GetMapping("/getApplicationsForRecruiterpostedJobs/id")
+	@GetMapping("/getApplicationsForRecruiterpostedJobs/{id}")
 	public List<Application> getApplicationsForRecruiterpostedJobs(@PathVariable(name = "id") Integer id) {
 		session = sf.openSession();
-			Query query = session.createQuery("from Application where job=:i");
+			Query query = session.createQuery("from Application where job.jobId=:i");
 			query.setParameter("i", id);
 			List<Application> application = query.list();
 		return application;
 	}
 	
 	@CrossOrigin(origins = "http://172.17.0.3:3000")
-	@GetMapping(path="/getUsersForApplication/id")
+	@GetMapping(value ="/getUsersForApplication/{id}")
 	public User getUsersForApplication(@PathVariable(name = "id") Integer id) {
 		session = sf.openSession();
 			Query query = session.createQuery("from Application where applicationId=:i");
@@ -121,10 +121,10 @@ public class ApplicationsController {
 	}
 	
 	@CrossOrigin(origins = "http://172.17.0.3:3000")
-	@GetMapping("/getApplicationsAppliedByUser/id")
+	@GetMapping("/getApplicationsAppliedByUser/{id}")
 	public Application getApplicationsAppliedByUser(@PathVariable(name = "id") Integer id) {
 		session = sf.openSession();
-			Query query = session.createQuery("from Application where userId=:i");
+			Query query = session.createQuery("from Application where user.userId=:i");
 			query.setParameter("i", id);
 			Application application =(Application)query.uniqueResult();
 		return application;
